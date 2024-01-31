@@ -1,3 +1,6 @@
+//DESIGN
+//snow effect
+//fire effect when server has started
 
 const express = require('express');
 const basicAuth = require('express-basic-auth');
@@ -49,9 +52,3 @@ app.get('/stop', async (req, res) => {
 
 app.listen(4000, () => console.log('Server running on port 4000'));
 
-
-//FUNCTIONALITY
-// 1. Output console
-
-//DESIGN
-//fire effect when server has started
