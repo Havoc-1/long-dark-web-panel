@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="/static/styles.css">
+    </head>
+    <body>
+        <div class="logo parallax" data-speed="4">    
+            <img src="/static/logo.png">
+        </div>
+        <div class="container1 parallax" data-speed="3">
+            <div class="display">
+                <div class="container1">
+                    <div class="status">
+                        <p>Server status: ${isRunning}</p>
+                    </div>
+                    <div class="buttons">
+                        <button onclick="fetch('/start').then(() => window.location.reload())">Start</button>
+                        <button onclick="fetch('/stop').then(() => window.location.reload())">Stop</button>
+                    </div>
+                </div>
+                <div class="container2">
+                    <div class="content">
+                        <p>Real World Time:</p>
+                        ${realWorldDays}:${realWorldHours}:${realWorldMinutes}
+                        <p>In-Game Time:</p>
+                        ${inGameDays}:${inGameHours}:${inGameMinutes}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="logs" class = "console"></div>
+        <script src="/static/parallaxEffect.js"></script>
+    </body>
+</html>
