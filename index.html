@@ -9,25 +9,59 @@
         <div class="display parallax" data-speed="3">
             <div class="container1">
                 <div class="status">
-                    <p>Server status: ${isRunning}</p>
+                    <p id="serverStatus">Server status: </p>
                 </div>
                 <div class="buttons">
-                    <button onclick="fetch('/start').then(() => window.location.reload())">Start</button>
-                    <button onclick="fetch('/stop').then(() => window.location.reload())">Stop</button>
+                    <button id="startButton" onclick="startServer()">Start</button>
+                    <button id="stopButton" onclick="stopServer()">Stop</button>
                 </div>
             </div>
             <div class="container2">
                 <div class="content">
                     <p>Real World Time:</p>
-                    ${realWorldDays}:${realWorldHours}:${realWorldMinutes}
+                    <p id="realWorldTime"></p>
                     <p>In-Game Time:</p>
-                    ${inGameDays}:${inGameHours}:${inGameMinutes}
+                    <p id="inGameTime"></p>
                 </div>
             </div>
         </div>
         <div id="logs" class="console"></div>
         <script src="/static/appLogs.js"></script>
         <script src="/static/parallaxEffect.js"></script>
+        <script>
+            function startServer() {
+                fetch('/start').then(() => window.location.reload());
+            }
+
+            function stopServer() {
+                fetch('/stop').then(() => window.location.reload());
+            }
+
+            function updateTimes() {
+                // Fetch the time from the server
+                fetch('/time')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update the HTML with the fetched time
+                        document.getElementById('realWorldTime').textContent = data.realWorldTime;
+                        document.getElementById('inGameTime').textContent = data.inGameTime;
+                    });
+            }
+
+            // Fetch the server status from the server
+            fetch('/status')
+                .then(response => response.json())
+                .then(data => {
+                    // Update the HTML with the server status
+                    document.getElementById('serverStatus').textContent += data.isRunning ? 'running' : 'not running';
+                    // Disable/enable the button based on the server status
+                    document.getElementById('startButton').disabled = data.isRunning;
+                    document.getElementById('stopButton').disabled = !data.isRunning;
+                    // Start fetching the time from the server if the server is running
+                    if (data.isRunning) {
+                        setInterval(updateTimes, 1000);
+                    }
+                });
+        </script>
     </body>
 </html>
-
