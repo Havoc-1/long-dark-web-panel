@@ -46,7 +46,7 @@ app.get('/time', (req, res) => {
     }
 });
 
-//Create new route for appLogs every 5 seconds
+//Create route for appLogs
 app.get('/logs', async (req, res) => {
     //console.log('Fetching logs...');
     const container = docker.getContainer('skycoop_container');
@@ -54,10 +54,12 @@ app.get('/logs', async (req, res) => {
         follow: false,
         stdout: true,
         stderr: true,
-        tail: 100 // Fetch the last 100 lines of logs
+        tail: 100 // Fetch this amount of lines from log
     });
 
-    const logs = logBuffer.toString('utf8');
+    let logs = logBuffer.toString('utf8');
+    // Remove characters between newline and [ because of unprintable characters from Docker
+    logs = logs.replace(/(\r?\n)[^\r\n[]*/g, '$1');
     //console.log('Logs:', logs);
     res.send(logs);
 });
