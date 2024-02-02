@@ -18,32 +18,32 @@ app.use(basicAuth({
     challenge: true
 }));
 
-let realWorldTime = 0;
-let inGameTime = 0;
+let realWorldSeconds = 0;
+let inGameMinutes = 0;
+let intervalId = null;
 
-
-//Update timer every second
+// Update real world time every second
 setInterval(() => {
-    realWorldTime++;
-    inGameTime += 12 //1 in-game minute is 5 seconds irl
+    realWorldSeconds++;
 }, 1000);
 
+// Update in-game time every 5 seconds
+setInterval(() => {
+    inGameMinutes++; // 1 in-game minute is 5 irl seconds
+}, 5000);
+
 app.get('/time', (req, res) => {
-    try {
-        const realWorldDays = Math.floor(realWorldTime / 60 / 24);
-        const realWorldHours = Math.floor(realWorldTime / 60 % 24);
-        const realWorldMinutes = realWorldTime % 60;
-        const inGameDays = Math.floor(inGameTime / 60 / 24);
-        const inGameHours = Math.floor(inGameTime / 60 % 24);
-        const inGameMinutes = inGameTime % 60;
-        res.json({ 
-            realWorldTime: `${realWorldDays}:${realWorldHours}:${realWorldMinutes}`,
-            inGameTime: `${inGameDays}:${inGameHours}:${inGameMinutes}`
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
+    const realWorldDays = Math.floor(realWorldSeconds / 60 / 60 / 24);
+    const realWorldHours = Math.floor(realWorldSeconds / 60 / 60 % 24);
+    const realWorldMinutes = Math.floor(realWorldSeconds / 60 % 60);
+    const realWorldSecs = realWorldSeconds % 60;
+    const inGameDays = Math.floor(inGameMinutes / 60 / 24);
+    const inGameHours = Math.floor(inGameMinutes / 60 % 24);
+    const inGameMins = inGameMinutes % 60;
+    res.json({ 
+        realWorldTime: `${realWorldDays}:${realWorldHours}:${realWorldMinutes}:${realWorldSecs}`,
+        inGameTime: `${inGameDays}:${inGameHours}:${inGameMins}`
+    });
 });
 
 //Create route for appLogs
@@ -69,12 +69,24 @@ app.get('/logs', async (req, res) => {
 app.get('/start', async (req, res) => {
     const container = docker.getContainer('skycoop_container');
     await container.start();
+    // Start the timers when server first starts up
+    intervalId = setInterval(() => {
+        realWorldTime++;
+        inGameTime += 12; // 1 in-game minute is 5 irl seconds
+    }, 1000);
     res.send('Started');
 });
 
 app.get('/stop', async (req, res) => {
     const container = docker.getContainer('skycoop_container');
     await container.stop();
+    // Stop the timers and reset them to 0 when the server stops
+    if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+    }
+    realWorldTime = 0;
+    inGameTime = 0;
     res.send('Stopped');
 });
 

@@ -1,6 +1,7 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="/static/styles.css">
+        <title>TLD Panel</title>
     </head>
     <body>
         <div class="display parallax" data-speed="3">
@@ -28,10 +29,14 @@
                 </div>
             </div>
         </div>
-        <div id="logs" class="console"></div>
+        <div id="console" class="consoleDisplay"></div>
         <script src="/static/appLogs.js"></script>
         <script src="/static/parallaxEffect.js"></script>
         <script>
+            //Start scrolling at the bottom
+            var consoleDiv = document.getElementById('console');
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+
             function startServer() {
                 fetch('/start').then(() => window.location.reload());
             }

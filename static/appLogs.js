@@ -1,10 +1,17 @@
-function fetchLogs() {
-    fetch('/logs')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('logs').innerText = data;
-        });
+function addLogMessage(message) {
+    var consoleDiv = document.getElementById('console');
+    // Add the new message
+    consoleDiv.innerHTML += '<p>' + message + '</p>';
+    // Scroll to the bottom of the div every time
+    consoleDiv.scrollTop = consoleDiv.scrollHeight;
 }
 
 // Fetch logs every 5 seconds
-setInterval(fetchLogs, 5000);
+setInterval(function() {
+    fetch('/logs')
+        .then(response => response.text())
+        .then(data => {
+            // Add the fetched logs to the console div
+            addLogMessage(data);
+        });
+}, 5000);

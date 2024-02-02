@@ -81,7 +81,7 @@ button:disabled {
     cursor: not-allowed;
 }
 
-.console {
+.consoleDisplay {
     width: 50%;
     height: 300px;
     color: white;
