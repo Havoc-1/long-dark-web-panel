@@ -73,6 +73,7 @@ app.get('/start', async (req, res) => {
     intervalId = setInterval(() => {
         realWorldTime++;
         inGameTime += 12; // 1 in-game minute is 5 irl seconds
+        fs.writeFileSync(path.join(__dirname, 'times.json'), JSON.stringify({ realWorldTime, inGameTime }));
     }, 1000);
     res.send('Started');
 });
@@ -87,6 +88,7 @@ app.get('/stop', async (req, res) => {
     }
     realWorldTime = 0;
     inGameTime = 0;
+    fs.writeFileSync(path.join(__dirname, 'times.json'), JSON.stringify({ realWorldTime, inGameTime }));
     res.send('Stopped');
 });
 
