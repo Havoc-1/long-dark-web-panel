@@ -10,14 +10,6 @@
             </div>
             <div class="containerDisplay">
                 <div class="container1">
-                    <div class="content">
-                        <p>Real World Time:</p>
-                        <p id="realWorldTime" class="dataDisplay"></p>
-                        <p>In-Game Time:</p>
-                        <p id="inGameTime" class="dataDisplay"></p>
-                    </div>
-                </div>
-                <div class="container2">
                     <div class="status">
                         <p>Server status:</p>
                         <p id="serverStatus" class="dataDisplay"></p>
@@ -45,17 +37,6 @@
                 fetch('/stop').then(() => window.location.reload());
             }
 
-            function updateTimes() {
-                // Fetch the time from the server
-                fetch('/time')
-                    .then(response => response.json())
-                    .then(data => {
-                        // Update the HTML with the fetched time
-                        document.getElementById('realWorldTime').textContent = data.realWorldTime;
-                        document.getElementById('inGameTime').textContent = data.inGameTime;
-                    });
-            }
-
             // Fetch the server status from the server
             fetch('/status')
                 .then(response => response.json())
@@ -65,10 +46,6 @@
                     // Disable/enable the button based on the server status
                     document.getElementById('startButton').disabled = data.isRunning;
                     document.getElementById('stopButton').disabled = !data.isRunning;
-                    // Start fetching the time from the server if the server is running
-                    if (data.isRunning) {
-                        setInterval(updateTimes, 1000);
-                    }
                 });
         </script>
     </body>
