@@ -52,6 +52,10 @@ To deploy this project run. Make sure the docker is not running
   pm2 start server.js
 ```
 
+## Screenshots 
+
+![Screenshot](https://github.com/Havoc-1/long-dark-web-panel/assets/87105826/f4dd1406-d200-41c3-a66b-0a5d995cc999)
+
 
 ## Acknowledgements
 The team at SkyCoop for making this experience possible
